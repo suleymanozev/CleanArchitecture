@@ -19,9 +19,9 @@ public class Program
             {
                 var context = services.GetRequiredService<ApplicationDbContext>();
 
-                if (context.Database.IsSqlServer())
+                if (context.Database.IsRelational())
                 {
-                    context.Database.Migrate();
+                    await context.Database.MigrateAsync();
                 }
 
                 var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
