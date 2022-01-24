@@ -21,7 +21,7 @@ public class Testing
     private static IConfigurationRoot _configuration = null!;
     private static IServiceScopeFactory _scopeFactory = null!;
     private static Checkpoint _checkpoint = null!;
-    private static string? _currentUserId;
+    private static Guid? _currentUserId;
 
     [OneTimeSetUp]
     public void RunBeforeAnyTests()
@@ -89,17 +89,17 @@ public class Testing
         return await mediator.Send(request);
     }
 
-    public static async Task<string> RunAsDefaultUserAsync()
+    public static async Task<Guid?> RunAsDefaultUserAsync()
     {
         return await RunAsUserAsync("test@local", "Testing1234!", Array.Empty<string>());
     }
 
-    public static async Task<string> RunAsAdministratorAsync()
+    public static async Task<Guid?> RunAsAdministratorAsync()
     {
         return await RunAsUserAsync("administrator@local", "Administrator1234!", new[] {"Administrator"});
     }
 
-    public static async Task<string> RunAsUserAsync(string userName, string password, string[] roles)
+    public static async Task<Guid?> RunAsUserAsync(string userName, string password, string[] roles)
     {
         using var scope = _scopeFactory.CreateScope();
 
@@ -111,11 +111,11 @@ public class Testing
 
         if (roles.Any())
         {
-            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
 
             foreach (var role in roles)
             {
-                await roleManager.CreateAsync(new IdentityRole(role));
+                await roleManager.CreateAsync(new ApplicationRole(role));
             }
 
             await userManager.AddToRolesAsync(user, roles);

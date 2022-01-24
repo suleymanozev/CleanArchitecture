@@ -9,7 +9,7 @@ namespace CleanArchitecture.Application.TodoItems.Queries.GetTodoItemsWithPagina
 
 public class GetTodoItemsWithPaginationQuery : IRequest<PaginatedList<TodoItemBriefDto>>
 {
-    public int ListId { get; set; }
+    public Guid ListId { get; set; }
     public int PageNumber { get; set; } = 1;
     public int PageSize { get; set; } = 10;
 }

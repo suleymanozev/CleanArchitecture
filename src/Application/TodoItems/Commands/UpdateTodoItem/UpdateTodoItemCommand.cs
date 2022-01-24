@@ -7,7 +7,7 @@ namespace CleanArchitecture.Application.TodoItems.Commands.UpdateTodoItem;
 
 public class UpdateTodoItemCommand : IRequest
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 
     public string? Title { get; set; }
 

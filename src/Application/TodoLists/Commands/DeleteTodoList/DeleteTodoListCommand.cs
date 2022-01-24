@@ -8,7 +8,7 @@ namespace CleanArchitecture.Application.TodoLists.Commands.DeleteTodoList;
 
 public class DeleteTodoListCommand : IRequest
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 }
 
 public class DeleteTodoListCommandHandler : IRequestHandler<DeleteTodoListCommand>

@@ -20,10 +20,10 @@ public class LoggingBehaviour<TRequest> : IRequestPreProcessor<TRequest> where T
     public async Task Process(TRequest request, CancellationToken cancellationToken)
     {
         var requestName = typeof(TRequest).Name;
-        var userId = _currentUserService.UserId ?? string.Empty;
+        var userId = _currentUserService.UserId ?? Guid.Empty;
         string userName = string.Empty;
 
-        if (!string.IsNullOrEmpty(userId))
+        if (userId != Guid.Empty)
         {
             userName = await _identityService.GetUserNameAsync(userId);
         }

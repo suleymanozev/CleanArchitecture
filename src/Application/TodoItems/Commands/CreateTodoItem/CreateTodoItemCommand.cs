@@ -5,14 +5,14 @@ using MediatR;
 
 namespace CleanArchitecture.Application.TodoItems.Commands.CreateTodoItem;
 
-public class CreateTodoItemCommand : IRequest<int>
+public class CreateTodoItemCommand : IRequest<Guid>
 {
-    public int ListId { get; set; }
+    public Guid ListId { get; set; }
 
     public string? Title { get; set; }
 }
 
-public class CreateTodoItemCommandHandler : IRequestHandler<CreateTodoItemCommand, int>
+public class CreateTodoItemCommandHandler : IRequestHandler<CreateTodoItemCommand, Guid>
 {
     private readonly IApplicationDbContext _context;
 
@@ -21,7 +21,7 @@ public class CreateTodoItemCommandHandler : IRequestHandler<CreateTodoItemComman
         _context = context;
     }
 
-    public async Task<int> Handle(CreateTodoItemCommand request, CancellationToken cancellationToken)
+    public async Task<Guid> Handle(CreateTodoItemCommand request, CancellationToken cancellationToken)
     {
         var entity = new TodoItem
         {

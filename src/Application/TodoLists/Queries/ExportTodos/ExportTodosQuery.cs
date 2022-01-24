@@ -8,7 +8,7 @@ namespace CleanArchitecture.Application.TodoLists.Queries.ExportTodos;
 
 public class ExportTodosQuery : IRequest<ExportTodosVm>
 {
-    public int ListId { get; set; }
+    public Guid ListId { get; set; }
 }
 
 public class ExportTodosQueryHandler : IRequestHandler<ExportTodosQuery, ExportTodosVm>
