@@ -39,6 +39,7 @@
 
     <ItemGroup>
       <_ContentIncludedByDefault Remove="wwwroot\api\specification.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\favicon.ico" />
     </ItemGroup>
 
 
