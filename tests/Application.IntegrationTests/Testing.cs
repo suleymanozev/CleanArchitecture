@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
+using Npgsql;
 using NUnit.Framework;
 using Respawn;
 
@@ -62,7 +63,9 @@ public class Testing
 
         _checkpoint = new Checkpoint
         {
-            TablesToIgnore = new[] { "__EFMigrationsHistory" }
+            DbAdapter = DbAdapter.Postgres,
+            SchemasToInclude = new[] {"public"},
+            TablesToIgnore = new[] {"__EFMigrationsHistory"}
         };
 
         EnsureDatabase();
@@ -74,7 +77,7 @@ public class Testing
 
         var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-        context.Database.Migrate();
+        context.Database.MigrateAsync().Wait();
     }
 
     public static async Task<TResponse> SendAsync<TResponse>(IRequest<TResponse> request)
@@ -93,7 +96,7 @@ public class Testing
 
     public static async Task<string> RunAsAdministratorAsync()
     {
-        return await RunAsUserAsync("administrator@local", "Administrator1234!", new[] { "Administrator" });
+        return await RunAsUserAsync("administrator@local", "Administrator1234!", new[] {"Administrator"});
     }
 
     public static async Task<string> RunAsUserAsync(string userName, string password, string[] roles)
@@ -102,7 +105,7 @@ public class Testing
 
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
-        var user = new ApplicationUser { UserName = userName, Email = userName };
+        var user = new ApplicationUser {UserName = userName, Email = userName};
 
         var result = await userManager.CreateAsync(user, password);
 
@@ -132,7 +135,9 @@ public class Testing
 
     public static async Task ResetState()
     {
-        await _checkpoint.Reset(_configuration.GetConnectionString("DefaultConnection"));
+        var connection = new NpgsqlConnection(_configuration.GetConnectionString("DefaultConnection"));
+        await connection.OpenAsync();
+        await _checkpoint.Reset(connection);
 
         _currentUserId = null;
     }

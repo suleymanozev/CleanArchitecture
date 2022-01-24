@@ -1,4 +1,4 @@
-version: '3.4'
+version: '3.9'
 
 services:
   webui:
@@ -19,3 +19,17 @@ services:
     depends_on:
       - db
     restart: on-failure
+  db:
+    image: postgres:14-alpine
+    restart: on-failure
+    environment:
+      POSTGRES_PASSWORD: myS3cr3t
+      POSTGRES_USER: CleanArchitecture
+      POSTGRES_MULTIPLE_DATABASES: CleanArchitectureDB,CleanArchitectureTestDB
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - .docker/postgres:/docker-entrypoint-initdb.d
+
+volumes:
+  db-data:
+    driver: local
