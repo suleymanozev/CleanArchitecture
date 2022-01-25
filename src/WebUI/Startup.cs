@@ -40,8 +40,10 @@ public class Startup
         services.AddRazorPages();
 
         // Customise default API behaviour
-        services.Configure<ApiBehaviorOptions>(options => 
+        services.Configure<ApiBehaviorOptions>(options =>
             options.SuppressModelStateInvalidFilter = true);
+
+        services.AddSwaggerGen();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -74,5 +76,8 @@ public class Startup
                 pattern: "{controller}/{action=Index}/{id?}");
             endpoints.MapRazorPages();
         });
+
+        app.UseSwagger();
+        app.UseSwaggerUI();
     }
 }
