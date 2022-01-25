@@ -1,35 +1,43 @@
 ﻿using CleanArchitecture.Application.Common.Exceptions;
+using CleanArchitecture.Application.IntegrationTests.Common.Extensions;
+using CleanArchitecture.Application.IntegrationTests.Common.Fixtures;
 using CleanArchitecture.Application.TodoItems.Commands.CreateTodoItem;
 using CleanArchitecture.Application.TodoItems.Commands.UpdateTodoItem;
 using CleanArchitecture.Application.TodoLists.Commands.CreateTodoList;
 using CleanArchitecture.Domain.Entities;
 using FluentAssertions;
-using NUnit.Framework;
+using Xunit;
 
 namespace CleanArchitecture.Application.IntegrationTests.TodoItems.Commands;
 
-using static Testing;
-
-public class UpdateTodoItemTests : TestBase
+[Collection(nameof(ApiTestCollection))]
+public class UpdateTodoItemTests : BaseScenario
 {
-    [Test]
+    private readonly TestServerFixture _fixture;
+
+    public UpdateTodoItemTests(TestServerFixture fixture) : base(fixture)
+    {
+        _fixture = fixture;
+    }
+
+    [Fact]
     public async Task ShouldRequireValidTodoItemId()
     {
         var command = new UpdateTodoItemCommand { Id = Guid.NewGuid(), Title = "New Title" };
-        await FluentActions.Invoking(() => SendAsync(command)).Should().ThrowAsync<NotFoundException>();
+        await FluentActions.Invoking(() => _fixture.SendAsync(command)).Should().ThrowAsync<NotFoundException>();
     }
 
-    [Test]
+    [Fact]
     public async Task ShouldUpdateTodoItem()
     {
-        var userId = await RunAsDefaultUserAsync();
+        var userId = await _fixture.RunAsDefaultUserAsync();
 
-        var listId = await SendAsync(new CreateTodoListCommand
+        var listId = await _fixture.SendAsync(new CreateTodoListCommand
         {
             Title = "New List"
         });
 
-        var itemId = await SendAsync(new CreateTodoItemCommand
+        var itemId = await _fixture.SendAsync(new CreateTodoItemCommand
         {
             ListId = listId,
             Title = "New Item"
@@ -41,9 +49,9 @@ public class UpdateTodoItemTests : TestBase
             Title = "Updated Item Title"
         };
 
-        await SendAsync(command);
+        await _fixture.SendAsync(command);
 
-        var item = await FindAsync<TodoItem>(itemId);
+        var item = await _fixture.FindAsync<TodoItem>(itemId);
 
         item.Should().NotBeNull();
         item!.Title.Should().Be(command.Title);

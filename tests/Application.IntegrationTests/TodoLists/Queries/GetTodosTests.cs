@@ -1,29 +1,37 @@
-﻿using CleanArchitecture.Application.TodoLists.Queries.GetTodos;
+﻿using CleanArchitecture.Application.IntegrationTests.Common.Extensions;
+using CleanArchitecture.Application.IntegrationTests.Common.Fixtures;
+using CleanArchitecture.Application.TodoLists.Queries.GetTodos;
 using CleanArchitecture.Domain.Entities;
 using CleanArchitecture.Domain.ValueObjects;
 using FluentAssertions;
-using NUnit.Framework;
+using Xunit;
 
 namespace CleanArchitecture.Application.IntegrationTests.TodoLists.Queries;
 
-using static Testing;
-
-public class GetTodosTests : TestBase
+[Collection(nameof(ApiTestCollection))]
+public class GetTodosTests : BaseScenario
 {
-    [Test]
+    private readonly TestServerFixture _fixture;
+
+    public GetTodosTests(TestServerFixture fixture) : base(fixture)
+    {
+        _fixture = fixture;
+    }
+
+    [Fact]
     public async Task ShouldReturnPriorityLevels()
     {
         var query = new GetTodosQuery();
 
-        var result = await SendAsync(query);
+        var result = await _fixture.SendAsync(query);
 
         result.PriorityLevels.Should().NotBeEmpty();
     }
 
-    [Test]
+    [Fact]
     public async Task ShouldReturnAllListsAndItems()
     {
-        await AddAsync(new TodoList
+        await _fixture.AddAsync(new TodoList
         {
             Title = "Shopping",
             Colour = Colour.Blue,
@@ -41,7 +49,7 @@ public class GetTodosTests : TestBase
 
         var query = new GetTodosQuery();
 
-        var result = await SendAsync(query);
+        var result = await _fixture.SendAsync(query);
 
         result.Lists.Should().HaveCount(1);
         result.Lists.First().Items.Should().HaveCount(7);

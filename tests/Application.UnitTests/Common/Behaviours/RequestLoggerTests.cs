@@ -3,25 +3,24 @@ using CleanArchitecture.Application.Common.Interfaces;
 using CleanArchitecture.Application.TodoItems.Commands.CreateTodoItem;
 using Microsoft.Extensions.Logging;
 using Moq;
-using NUnit.Framework;
+using Xunit;
 
 namespace CleanArchitecture.Application.UnitTests.Common.Behaviours;
 
 public class RequestLoggerTests
 {
-    private Mock<ILogger<CreateTodoItemCommand>> _logger = null!;
-    private Mock<ICurrentUserService> _currentUserService = null!;
-    private Mock<IIdentityService> _identityService = null!;
-
-    [SetUp]
-    public void Setup()
+    private readonly Mock<ILogger<CreateTodoItemCommand>> _logger;
+    private readonly Mock<ICurrentUserService> _currentUserService;
+    private readonly Mock<IIdentityService> _identityService;
+    
+    public RequestLoggerTests()
     {
         _logger = new Mock<ILogger<CreateTodoItemCommand>>();
         _currentUserService = new Mock<ICurrentUserService>();
         _identityService = new Mock<IIdentityService>();
     }
 
-    [Test]
+    [Fact]
     public async Task ShouldCallGetUserNameAsyncOnceIfAuthenticated()
     {
         _currentUserService.Setup(x => x.UserId).Returns(Guid.NewGuid());
@@ -33,7 +32,7 @@ public class RequestLoggerTests
         _identityService.Verify(i => i.GetUserNameAsync(It.IsAny<Guid>()), Times.Once);
     }
 
-    [Test]
+    [Fact]
     public async Task ShouldNotCallGetUserNameAsyncOnceIfUnauthenticated()
     {
         var requestLogger = new LoggingBehaviour<CreateTodoItemCommand>(_logger.Object, _currentUserService.Object, _identityService.Object);

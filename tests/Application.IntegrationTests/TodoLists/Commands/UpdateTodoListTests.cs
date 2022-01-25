@@ -1,67 +1,58 @@
 ﻿using CleanArchitecture.Application.Common.Exceptions;
+using CleanArchitecture.Application.IntegrationTests.Common.Extensions;
+using CleanArchitecture.Application.IntegrationTests.Common.Fixtures;
 using CleanArchitecture.Application.TodoLists.Commands.CreateTodoList;
 using CleanArchitecture.Application.TodoLists.Commands.UpdateTodoList;
 using CleanArchitecture.Domain.Entities;
 using FluentAssertions;
-using NUnit.Framework;
+using Xunit;
 
 namespace CleanArchitecture.Application.IntegrationTests.TodoLists.Commands;
 
-using static Testing;
-
-public class UpdateTodoListTests : TestBase
+[Collection(nameof(ApiTestCollection))]
+public class UpdateTodoListTests : BaseScenario
 {
-    [Test]
+    private readonly TestServerFixture _fixture;
+
+    public UpdateTodoListTests(TestServerFixture fixture) : base(fixture)
+    {
+        _fixture = fixture;
+    }
+
+    [Fact]
     public async Task ShouldRequireValidTodoListId()
     {
-        var command = new UpdateTodoListCommand { Id = Guid.NewGuid(), Title = "New Title" };
-        await FluentActions.Invoking(() => SendAsync(command)).Should().ThrowAsync<NotFoundException>();
+        var command = new UpdateTodoListCommand {Id = Guid.NewGuid(), Title = "New Title"};
+        await FluentActions.Invoking(() => _fixture.SendAsync(command)).Should().ThrowAsync<NotFoundException>();
     }
 
-    [Test]
+    [Fact]
     public async Task ShouldRequireUniqueTitle()
     {
-        var listId = await SendAsync(new CreateTodoListCommand
-        {
-            Title = "New List"
-        });
+        var listId = await _fixture.SendAsync(new CreateTodoListCommand {Title = "New List"});
 
-        await SendAsync(new CreateTodoListCommand
-        {
-            Title = "Other List"
-        });
+        await _fixture.SendAsync(new CreateTodoListCommand {Title = "Other List"});
 
-        var command = new UpdateTodoListCommand
-        {
-            Id = listId,
-            Title = "Other List"
-        };
+        var command = new UpdateTodoListCommand {Id = listId, Title = "Other List"};
 
         (await FluentActions.Invoking(() =>
-            SendAsync(command))
+                    _fixture.SendAsync(command))
                 .Should().ThrowAsync<ValidationException>().Where(ex => ex.Errors.ContainsKey("Title")))
-                .And.Errors["Title"].Should().Contain("The specified title already exists.");
+            .And.Errors["Title"].Should().Contain("The specified title already exists.");
     }
 
-    [Test]
+    [Fact]
     public async Task ShouldUpdateTodoList()
     {
-        var userId = await RunAsDefaultUserAsync();
+        var userId = await _fixture.RunAsDefaultUserAsync();
 
-        var listId = await SendAsync(new CreateTodoListCommand
-        {
-            Title = "New List"
-        });
+        var listId = await _fixture.SendAsync(new CreateTodoListCommand {Title = "New List"});
 
-        var command = new UpdateTodoListCommand
-        {
-            Id = listId,
-            Title = "Updated List Title"
-        };
+        var command = new UpdateTodoListCommand {Id = listId, Title = "Updated List Title"};
 
-        await SendAsync(command);
+        await _fixture.SendAsync(command);
 
-        var list = await FindAsync<TodoList>(listId);
+        var list = await _fixture.FindAsync<TodoList>(listId);
 
         list.Should().NotBeNull();
         list!.Title.Should().Be(command.Title);

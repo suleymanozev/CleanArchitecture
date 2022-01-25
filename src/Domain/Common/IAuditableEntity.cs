@@ -1,6 +1,6 @@
-﻿namespace CleanArchitecture.Domain.Common;
+namespace CleanArchitecture.Domain.Common;
 
-public abstract class AuditableEntity : Entity, IAuditableEntity
+public interface IAuditableEntity : IEntity
 {
     public DateTime Created { get; set; }
 

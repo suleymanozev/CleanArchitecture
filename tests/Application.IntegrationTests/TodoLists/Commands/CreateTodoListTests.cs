@@ -1,26 +1,34 @@
 ﻿using CleanArchitecture.Application.Common.Exceptions;
+using CleanArchitecture.Application.IntegrationTests.Common.Extensions;
+using CleanArchitecture.Application.IntegrationTests.Common.Fixtures;
 using CleanArchitecture.Application.TodoLists.Commands.CreateTodoList;
 using CleanArchitecture.Domain.Entities;
 using FluentAssertions;
-using NUnit.Framework;
+using Xunit;
 
 namespace CleanArchitecture.Application.IntegrationTests.TodoLists.Commands;
 
-using static Testing;
-
-public class CreateTodoListTests : TestBase
+[Collection(nameof(ApiTestCollection))]
+public class CreateTodoListTests : BaseScenario
 {
-    [Test]
+    private readonly TestServerFixture _fixture;
+
+    public CreateTodoListTests(TestServerFixture fixture) : base(fixture)
+    {
+        _fixture = fixture;
+    }
+
+    [Fact]
     public async Task ShouldRequireMinimumFields()
     {
         var command = new CreateTodoListCommand();
-        await FluentActions.Invoking(() => SendAsync(command)).Should().ThrowAsync<ValidationException>();
+        await FluentActions.Invoking(() => _fixture.SendAsync(command)).Should().ThrowAsync<ValidationException>();
     }
 
-    [Test]
+    [Fact]
     public async Task ShouldRequireUniqueTitle()
     {
-        await SendAsync(new CreateTodoListCommand
+        await _fixture.SendAsync(new CreateTodoListCommand
         {
             Title = "Shopping"
         });
@@ -31,22 +39,22 @@ public class CreateTodoListTests : TestBase
         };
 
         await FluentActions.Invoking(() =>
-            SendAsync(command)).Should().ThrowAsync<ValidationException>();
+            _fixture.SendAsync(command)).Should().ThrowAsync<ValidationException>();
     }
 
-    [Test]
+    [Fact]
     public async Task ShouldCreateTodoList()
     {
-        var userId = await RunAsDefaultUserAsync();
+        var userId = await _fixture.RunAsDefaultUserAsync();
 
         var command = new CreateTodoListCommand
         {
             Title = "Tasks"
         };
 
-        var id = await SendAsync(command);
+        var id = await _fixture.SendAsync(command);
 
-        var list = await FindAsync<TodoList>(id);
+        var list = await _fixture.FindAsync<TodoList>(id);
 
         list.Should().NotBeNull();
         list!.Title.Should().Be(command.Title);

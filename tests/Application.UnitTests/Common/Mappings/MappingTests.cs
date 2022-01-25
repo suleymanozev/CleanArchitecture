@@ -3,7 +3,7 @@ using AutoMapper;
 using CleanArchitecture.Application.Common.Mappings;
 using CleanArchitecture.Application.TodoLists.Queries.GetTodos;
 using CleanArchitecture.Domain.Entities;
-using NUnit.Framework;
+using Xunit;
 
 namespace CleanArchitecture.Application.UnitTests.Common.Mappings;
 
@@ -20,15 +20,15 @@ public class MappingTests
         _mapper = _configuration.CreateMapper();
     }
 
-    [Test]
+    [Fact]
     public void ShouldHaveValidConfiguration()
     {
         _configuration.AssertConfigurationIsValid();
     }
 
-    [Test]
-    [TestCase(typeof(TodoList), typeof(TodoListDto))]
-    [TestCase(typeof(TodoItem), typeof(TodoItemDto))]
+    [Theory]
+    [InlineData(typeof(TodoList), typeof(TodoListDto))]
+    [InlineData(typeof(TodoItem), typeof(TodoItemDto))]
     public void ShouldSupportMappingFromSourceToDestination(Type source, Type destination)
     {
         var instance = GetInstanceOf(source);

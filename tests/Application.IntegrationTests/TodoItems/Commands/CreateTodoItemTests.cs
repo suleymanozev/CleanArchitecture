@@ -1,31 +1,39 @@
 ﻿using CleanArchitecture.Application.Common.Exceptions;
+using CleanArchitecture.Application.IntegrationTests.Common.Extensions;
+using CleanArchitecture.Application.IntegrationTests.Common.Fixtures;
 using CleanArchitecture.Application.TodoItems.Commands.CreateTodoItem;
 using CleanArchitecture.Application.TodoLists.Commands.CreateTodoList;
 using CleanArchitecture.Domain.Entities;
 using FluentAssertions;
-using NUnit.Framework;
+using Xunit;
 
 namespace CleanArchitecture.Application.IntegrationTests.TodoItems.Commands;
 
-using static Testing;
-
-public class CreateTodoItemTests : TestBase
+[Collection(nameof(ApiTestCollection))]
+public class CreateTodoItemTests : BaseScenario
 {
-    [Test]
+    private readonly TestServerFixture _fixture;
+
+    public CreateTodoItemTests(TestServerFixture fixture) : base(fixture)
+    {
+        _fixture = fixture;
+    }
+    
+    [Fact]
     public async Task ShouldRequireMinimumFields()
     {
         var command = new CreateTodoItemCommand();
 
         await FluentActions.Invoking(() =>
-            SendAsync(command)).Should().ThrowAsync<ValidationException>();
+            _fixture.SendAsync(command)).Should().ThrowAsync<ValidationException>();
     }
 
-    [Test]
+    [Fact]
     public async Task ShouldCreateTodoItem()
     {
-        var userId = await RunAsDefaultUserAsync();
+        var userId = await _fixture.RunAsDefaultUserAsync();
 
-        var listId = await SendAsync(new CreateTodoListCommand
+        var listId = await _fixture.SendAsync(new CreateTodoListCommand
         {
             Title = "New List"
         });
@@ -36,9 +44,9 @@ public class CreateTodoItemTests : TestBase
             Title = "Tasks"
         };
 
-        var itemId = await SendAsync(command);
+        var itemId = await _fixture.SendAsync(command);
 
-        var item = await FindAsync<TodoItem>(itemId);
+        var item = await _fixture.FindAsync<TodoItem>(itemId);
 
         item.Should().NotBeNull();
         item!.ListId.Should().Be(command.ListId);

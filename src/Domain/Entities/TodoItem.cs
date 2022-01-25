@@ -2,8 +2,6 @@
 
 public class TodoItem : AuditableEntity, IHasDomainEvent
 {
-    public Guid Id { get; set; }
-
     public Guid ListId { get; set; }
 
     public string? Title { get; set; }
