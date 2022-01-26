@@ -1,6 +1,7 @@
 ﻿using CleanArchitecture.Application.IntegrationTests.Common.Fixtures;
 using Npgsql;
 using Respawn;
+using Respawn.Graph;
 using Xunit;
 
 namespace CleanArchitecture.Application.IntegrationTests;
@@ -16,7 +17,7 @@ public abstract class BaseScenario : IAsyncLifetime
             
         _checkpoint = new Checkpoint
         {
-            TablesToIgnore = new[] {"__EFMigrationsHistory"},
+            TablesToIgnore = new Table[] {"__EFMigrationsHistory"},
             SchemasToInclude = new[] {"public"},
             DbAdapter = DbAdapter.Postgres
         };
