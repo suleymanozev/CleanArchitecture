@@ -29,5 +29,5 @@ public class TodoItem : AuditableEntity, IHasDomainEvent
 
     public TodoList List { get; set; } = null!;
 
-    public List<DomainEvent> DomainEvents { get; set; } = new List<DomainEvent>();
+    public List<DomainEvent> DomainEvents { get; set; } = new();
 }
