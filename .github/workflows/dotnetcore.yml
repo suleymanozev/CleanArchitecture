@@ -21,12 +21,13 @@ jobs:
     runs-on: ubuntu-latest
     services:
       sql:
-        image: mcr.microsoft.com/mssql/server
-        ports:
-          - 1433:1433
+        image: postgres:14-alpine
         env:
-          SA_PASSWORD: Your_password123
-          ACCEPT_EULA: Y
+          POSTGRES_PASSWORD: myS3cr3t
+          POSTGRES_USER: CleanArchitecture
+          POSTGRES_MULTIPLE_DATABASES: CleanArchitectureDB,CleanArchitectureTestDB
+        ports:
+          - 5432:5432
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET
@@ -34,4 +35,4 @@ jobs:
     - name: run tests
       run: dotnet test CleanArchitecture.sln --configuration Release
       env:
-        ConnectionStrings__DefaultConnection: Server=.;Database=CleanArchitectureTestDb;User=sa;Password=Your_password123;MultipleActiveResultSets=true
+        ConnectionStrings__DefaultConnection: Server=.;Port=5432;Database=CleanArchitectureDB;User Id=CleanArchitecture;Password=myS3cr3t;
