@@ -46,7 +46,8 @@ public class UpdateTodoItemTests : BaseScenario
         var command = new UpdateTodoItemCommand
         {
             Id = itemId,
-            Title = "Updated Item Title"
+            Title = "Updated Item Title",
+            Done = true
         };
 
         await _fixture.SendAsync(command);
@@ -55,6 +56,7 @@ public class UpdateTodoItemTests : BaseScenario
 
         item.Should().NotBeNull();
         item!.Title.Should().Be(command.Title);
+        item.Done.Should().Be(command.Done);
         item.LastModifiedBy.Should().NotBeNull();
         item.LastModifiedBy.Should().Be(userId);
         item.LastModified.Should().NotBeNull();
