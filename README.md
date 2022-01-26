@@ -1,8 +1,7 @@
 # Clean Architecture Solution Template
 ![.NET Core](https://github.com/suleymanozev/CleanArchitecture/workflows/.NET/badge.svg)
 
-
-<br/>
+Fork of [Clean Architecture Solution Template](https://github.com/jasontaylordev/CleanArchitecture)
 
 This is a solution template for creating a ASP.NET Core following the principles of Clean Architecture. Create a new project based on this template by clicking the above **Use this template** button. 
 
@@ -92,3 +91,6 @@ If you are having problems, please let us know by [raising a new issue](https://
 ## License
 
 This project is licensed with the [MIT license](LICENSE).
+
+Thanks Jason Taylor
+[Twitter](https://twitter.com/jasontaylordev), [GitHub](https://github.com/jasontaylordev)
