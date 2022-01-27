@@ -19,20 +19,9 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-    services:
-      sql:
-        image: postgres:14-alpine
-        env:
-          POSTGRES_PASSWORD: myS3cr3t
-          POSTGRES_USER: CleanArchitecture
-          POSTGRES_MULTIPLE_DATABASES: CleanArchitectureDB,CleanArchitectureTestDB
-        ports:
-          - 5432:5432
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
     - name: run tests
       run: dotnet test CleanArchitecture.sln --configuration Release
-      env:
-        ConnectionStrings__DefaultConnection: Server=.;Port=5432;Database=CleanArchitectureDB;User Id=CleanArchitecture;Password=myS3cr3t;
