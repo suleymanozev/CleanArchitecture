@@ -5,6 +5,7 @@ using CleanArchitecture.Infrastructure.Persistence;
 using CleanArchitecture.WebUI.Filters;
 using CleanArchitecture.WebUI.Services;
 using FluentValidation.AspNetCore;
+using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CleanArchitecture.WebUI;
@@ -32,6 +33,15 @@ public class Startup
 
         services.AddHealthChecks()
             .AddDbContextCheck<ApplicationDbContext>();
+
+        services.AddMassTransit(x =>
+        {
+            x.AddConsumers(typeof(Application.DependencyInjection).Assembly);
+            x.SetKebabCaseEndpointNameFormatter();
+            
+            x.UsingRabbitMq((ctx, cfg) => cfg.ConfigureEndpoints(ctx));
+        });
+        services.AddMassTransitHostedService();
 
         services.AddControllersWithViews(options =>
             options.Filters.Add<ApiExceptionFilterAttribute>())
