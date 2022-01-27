@@ -1,4 +1,7 @@
-﻿namespace CleanArchitecture.Domain.Entities;
+﻿using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
+
+namespace CleanArchitecture.Domain.Entities;
 
 public class TodoItem : AuditableEntity, IHasDomainEvent
 {
@@ -18,7 +21,7 @@ public class TodoItem : AuditableEntity, IHasDomainEvent
         get => _done;
         set
         {
-            if (value == true && _done == false)
+            if (value && _done == false)
             {
                 DomainEvents.Add(new TodoItemCompletedEvent(this));
             }
@@ -29,5 +32,7 @@ public class TodoItem : AuditableEntity, IHasDomainEvent
 
     public TodoList List { get; set; } = null!;
 
+    [JsonIgnore]
+    [IgnoreDataMember]
     public List<DomainEvent> DomainEvents { get; set; } = new();
 }

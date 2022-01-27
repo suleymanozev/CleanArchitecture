@@ -1,24 +1,21 @@
-﻿using CleanArchitecture.Application.Common.Models;
-using CleanArchitecture.Domain.Events;
-using MediatR;
+﻿using CleanArchitecture.Domain.Events;
+using MassTransit;
 using Microsoft.Extensions.Logging;
 
 namespace CleanArchitecture.Application.TodoItems.EventHandlers;
 
-public class TodoItemCreatedEventHandler : INotificationHandler<DomainEventNotification<TodoItemCreatedEvent>>
+public class TodoItemCreatedEventConsumer : IConsumer<TodoItemCreatedEvent>
 {
-    private readonly ILogger<TodoItemCreatedEventHandler> _logger;
+    private readonly ILogger<TodoItemCreatedEventConsumer> _logger;
 
-    public TodoItemCreatedEventHandler(ILogger<TodoItemCreatedEventHandler> logger)
+    public TodoItemCreatedEventConsumer(ILogger<TodoItemCreatedEventConsumer> logger)
     {
         _logger = logger;
     }
 
-    public Task Handle(DomainEventNotification<TodoItemCreatedEvent> notification, CancellationToken cancellationToken)
+    public Task Consume(ConsumeContext<TodoItemCreatedEvent> context)
     {
-        var domainEvent = notification.DomainEvent;
-
-        _logger.LogInformation("CleanArchitecture Domain Event: {DomainEvent}", domainEvent.GetType().Name);
+        _logger.LogInformation("CleanArchitecture Domain Event: {DomainEvent}", context.Message.GetType().Name);
 
         return Task.CompletedTask;
     }
