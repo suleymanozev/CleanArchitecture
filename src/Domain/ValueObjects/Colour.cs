@@ -2,10 +2,6 @@
 
 public class Colour : ValueObject
 {
-    static Colour()
-    {
-    }
-
     private Colour()
     {
     }

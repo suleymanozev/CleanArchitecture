@@ -44,6 +44,14 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
                     entry.Entity.LastModifiedBy = _currentUserService.UserId;
                     entry.Entity.LastModified = _dateTime.Now;
                     break;
+                case EntityState.Detached:
+                    break;
+                case EntityState.Unchanged:
+                    break;
+                case EntityState.Deleted:
+                    break;
+                default:
+                    throw new Exception();
             }
         }
 
