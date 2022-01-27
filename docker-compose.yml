@@ -29,7 +29,16 @@ services:
     volumes:
       - db-data:/var/lib/postgresql/data
       - .docker/postgres:/docker-entrypoint-initdb.d
+  queue:
+    image: rabbitmq:3-management-alpine
+    volumes:
+      - queue-data:/var/lib/rabbitmq/
+      - queue-log:/var/log/rabbitmq
 
 volumes:
   db-data:
+    driver: local
+  queue-data:
+    driver: local
+  queue-log:
     driver: local
