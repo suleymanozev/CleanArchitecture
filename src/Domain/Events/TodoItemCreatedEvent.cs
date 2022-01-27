@@ -2,10 +2,10 @@
 
 public class TodoItemCreatedEvent : DomainEvent
 {
-    public TodoItemCreatedEvent(TodoItem item)
+    public TodoItemCreatedEvent(Guid id)
     {
-        Item = item;
+        Id = id;
     }
 
-    public TodoItem Item { get; }
+    public Guid Id { get; }
 }

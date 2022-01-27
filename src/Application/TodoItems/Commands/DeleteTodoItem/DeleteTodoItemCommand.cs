@@ -32,7 +32,7 @@ public class DeleteTodoItemCommandHandler : IRequestHandler<DeleteTodoItemComman
 
         _context.TodoItems.Remove(entity);
 
-        entity.DomainEvents.Add(new TodoItemDeletedEvent(entity));
+        entity.DomainEvents.Add(new TodoItemDeletedEvent(entity.Id));
 
         await _context.SaveChangesAsync(cancellationToken);
 

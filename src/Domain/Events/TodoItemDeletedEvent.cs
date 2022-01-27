@@ -2,10 +2,10 @@
 
 public class TodoItemDeletedEvent : DomainEvent
 {
-    public TodoItemDeletedEvent(TodoItem item)
+    public TodoItemDeletedEvent(Guid id)
     {
-        Item = item;
+        Id = id;
     }
 
-    public TodoItem Item { get; }
+    public Guid Id { get; }
 }

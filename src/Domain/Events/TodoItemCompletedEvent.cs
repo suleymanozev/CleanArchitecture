@@ -2,10 +2,10 @@
 
 public class TodoItemCompletedEvent : DomainEvent
 {
-    public TodoItemCompletedEvent(TodoItem item)
+    public TodoItemCompletedEvent(Guid id)
     {
-        Item = item;
+        Id = id;
     }
 
-    public TodoItem Item { get; }
+    public Guid Id { get; }
 }

@@ -23,16 +23,14 @@ public class TodoItem : AuditableEntity, IHasDomainEvent
         {
             if (value && _done == false)
             {
-                DomainEvents.Add(new TodoItemCompletedEvent(this));
+                DomainEvents.Add(new TodoItemCompletedEvent(Id));
             }
 
             _done = value;
         }
     }
 
-    public TodoList List { get; set; } = null!;
+    public virtual TodoList List { get; set; } = null!;
 
-    [JsonIgnore]
-    [IgnoreDataMember]
     public List<DomainEvent> DomainEvents { get; set; } = new();
 }

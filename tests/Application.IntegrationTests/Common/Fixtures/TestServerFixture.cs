@@ -14,12 +14,15 @@ namespace CleanArchitecture.Application.IntegrationTests.Common.Fixtures;
 public class TestServerFixture : WebApplicationFactory<Startup>, IAsyncLifetime
 {
     public DatabaseFixture DatabaseFixture { get; }
+    public QueueFixture QueueFixture { get; }
     public string? ConnectionString { get; set; }
+    public string? QueueURI { get; set; }
     public readonly Mock<ICurrentUserService> MockCurrentUserService = new(MockBehavior.Strict);
 
     public TestServerFixture()
     {
         DatabaseFixture = new DatabaseFixture();
+        QueueFixture = new QueueFixture();
     }
     
     public void VerifyAllMocks() => Mock.VerifyAll(this.MockCurrentUserService);
@@ -38,6 +41,11 @@ public class TestServerFixture : WebApplicationFactory<Startup>, IAsyncLifetime
                 data.Add("ConnectionStrings:DefaultConnection", ConnectionString);
             }
 
+            if (QueueURI != null)
+            {
+                data.Add("AMQP_URI", QueueURI);
+            }
+
             configBuilder.AddInMemoryCollection(data);
         });
     }
@@ -45,7 +53,9 @@ public class TestServerFixture : WebApplicationFactory<Startup>, IAsyncLifetime
     public async Task InitializeAsync()
     {
         await DatabaseFixture.InitializeAsync();
+        await QueueFixture.InitializeAsync();
         ConnectionString = DatabaseFixture.Container.ConnectionString;
+        QueueURI = QueueFixture.Container.ConnectionString;
 
         using var scope = Services.CreateScope();
         var scopedServices = scope.ServiceProvider;
@@ -59,5 +69,6 @@ public class TestServerFixture : WebApplicationFactory<Startup>, IAsyncLifetime
     {
         VerifyAllMocks();
         await DatabaseFixture.DisposeAsync();
+        await QueueFixture.DisposeAsync();
     }
 }

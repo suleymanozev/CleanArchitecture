@@ -39,7 +39,12 @@ public class Startup
             x.AddConsumers(typeof(Application.DependencyInjection).Assembly);
             x.SetKebabCaseEndpointNameFormatter();
             
-            x.UsingRabbitMq((ctx, cfg) => cfg.ConfigureEndpoints(ctx));
+            x.UsingRabbitMq((ctx, cfg) =>
+            {
+                cfg.Host(Configuration["AMQP_URI"]);
+                cfg.UseSystemTextJsonOnly();
+                cfg.ConfigureEndpoints(ctx);
+            });
         });
         services.AddMassTransitHostedService();
 
