@@ -38,7 +38,7 @@ jobs:
     - uses: codecov/codecov-action@v2
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        files: ./coverage-report/Cobertura.xml
+        files: ${{github.workspace}}/.coverage-report/Cobertura.xml
     - name: Run codacy-coverage-reporter
       uses: codacy/codacy-coverage-reporter-action@v1
       with:
