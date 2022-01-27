@@ -1,5 +1,7 @@
 # Clean Architecture Solution Template
 ![.NET Core](https://github.com/suleymanozev/CleanArchitecture/workflows/.NET/badge.svg)
+[![Maintainability](https://api.codeclimate.com/v1/badges/d21685f66cf9a589d685/maintainability)](https://codeclimate.com/github/suleymanozev/CleanArchitecture/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/d21685f66cf9a589d685/test_coverage)](https://codeclimate.com/github/suleymanozev/CleanArchitecture/test_coverage)
 
 Fork of [Clean Architecture Solution Template](https://github.com/jasontaylordev/CleanArchitecture)
 
