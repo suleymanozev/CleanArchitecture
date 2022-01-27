@@ -18,7 +18,13 @@ public class CurrentUserService : ICurrentUserService
         get
         {
             var httpContext = _httpContextAccessor.HttpContext;
-            return httpContext == null ? null : Guid.Parse(httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            var nameIdentifier = httpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (nameIdentifier == null)
+            {
+                return null;
+            }
+            return Guid.Parse(nameIdentifier);
         }
     }
 }
