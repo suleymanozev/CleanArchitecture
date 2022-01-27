@@ -27,15 +27,14 @@ jobs:
       run: dotnet tool restore
     - name: run tests
       run: dotnet test CleanArchitecture.sln --configuration Release /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
-    - name: generate report
-      run: dotnet reportgenerator "-reports:tests/**/coverage.cobertura.xml" "-targetdir:.coverage-report" -reporttypes:cobertura
     - name: publish code coverage
       uses: paambaati/codeclimate-action@v3.0.0
       env:
         CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
       with:
+        coverageCommand: dotnet reportgenerator "-reports:tests/**/coverage.cobertura.xml" "-targetdir:.coverage-report" -reporttypes:cobertura
         coverageLocations: |
-          ${{github.workspace}}/tests/**/coverage.cobertura.xml:cobertura
+          ${{github.workspace}}/.coverage-report/Cobertura.xml:cobertura
     - name: Run codacy-coverage-reporter
       uses: codacy/codacy-coverage-reporter-action@v1
       with:
