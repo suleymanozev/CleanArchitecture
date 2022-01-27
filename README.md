@@ -11,6 +11,7 @@ This is a solution template for creating a ASP.NET Core following the principles
 * [Entity Framework Core 6](https://docs.microsoft.com/en-us/ef/core/)
 * [PostgreSQL](https://www.postgresql.org/)
 * [MediatR](https://github.com/jbogard/MediatR)
+* [MassTransit](https://masstransit-project.com/)
 * [AutoMapper](https://automapper.org/)
 * [FluentValidation](https://fluentvalidation.net/)
 * [xUnit](https://xunit.net/), [DotNet.TestContainers](https://github.com/HofmeisterAn/dotnet-testcontainers), [FluentAssertions](https://fluentassertions.com/), [Moq](https://github.com/moq) & [Respawn](https://github.com/jbogard/Respawn)
