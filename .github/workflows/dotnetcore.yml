@@ -24,4 +24,11 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
     - name: run tests
-      run: dotnet test CleanArchitecture.sln --configuration Release
+      run: dotnet test CleanArchitecture.sln --configuration Release /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
+    - name: generate report
+      run: dotnet reportgenerator "-reports:tests/**/coverage.cobertura.xml" "-targetdir:.coverage-report" -reporttypes:cobertura
+    - name: Run codacy-coverage-reporter
+      uses: codacy/codacy-coverage-reporter-action@v1
+      with:
+        project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+        coverage-reports: .coverage-report/Cobertura.xml
