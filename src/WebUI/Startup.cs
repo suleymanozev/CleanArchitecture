@@ -36,7 +36,7 @@ public class Startup
 
         AddMassTransit(services);
 
-        services.AddControllersWithViews(options =>
+        services.AddControllers(options =>
             options.Filters.Add<ApiExceptionFilterAttribute>())
                 .AddFluentValidation(x => x.AutomaticValidationEnabled = false);
 
