@@ -30,4 +30,8 @@
         <ProjectReference Include="..\..\src\Infrastructure\Infrastructure.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="coverage.json" />
+    </ItemGroup>
+
 </Project>
