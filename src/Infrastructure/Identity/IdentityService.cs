@@ -47,7 +47,7 @@ public class IdentityService : IIdentityService
         var isExistsUser = await IsExistsUser(userName);
         if (!isExistsUser)
         {
-            throw new NotFoundException();
+            throw new NotFoundException(nameof(ApplicationUser), userName);
         }
 
         var user = await _userManager.FindByNameAsync(userName);
@@ -59,7 +59,7 @@ public class IdentityService : IIdentityService
         var isExistsUser = await IsExistsUser(userName);
         if (!isExistsUser)
         {
-            throw new NotFoundException();
+            throw new NotFoundException(nameof(ApplicationUser), userName);
         }
 
         var user = await _userManager.FindByNameAsync(userName);
@@ -71,7 +71,7 @@ public class IdentityService : IIdentityService
         var isExistsUser = await IsExistsUser(userName);
         if (!isExistsUser)
         {
-            throw new NotFoundException();
+            throw new NotFoundException(nameof(ApplicationUser), userName);
         }
 
         var user = await _userManager.FindByNameAsync(userName);
@@ -100,7 +100,7 @@ public class IdentityService : IIdentityService
 
         if (user == null)
         {
-            throw new NotFoundException();
+            throw new NotFoundException(nameof(ApplicationUser), userId!);
         }
 
         var principal = await _userClaimsPrincipalFactory.CreateAsync(user);
