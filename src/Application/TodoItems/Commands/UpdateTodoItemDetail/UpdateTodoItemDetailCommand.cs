@@ -3,6 +3,7 @@ using CleanArchitecture.Application.Common.Interfaces;
 using CleanArchitecture.Domain.Entities;
 using CleanArchitecture.Domain.Enums;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Application.TodoItems.Commands.UpdateTodoItemDetail;
 
@@ -29,7 +30,7 @@ public class UpdateTodoItemDetailCommandHandler : IRequestHandler<UpdateTodoItem
     public async Task<Unit> Handle(UpdateTodoItemDetailCommand request, CancellationToken cancellationToken)
     {
         var entity = await _context.TodoItems
-            .FindAsync(new object[] { request.Id }, cancellationToken);
+            .SingleOrDefaultAsync(t => t.Id == request.Id, cancellationToken);
 
         if (entity == null)
         {
