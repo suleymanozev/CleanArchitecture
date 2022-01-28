@@ -35,12 +35,3 @@ jobs:
         coverageCommand: dotnet reportgenerator "-reports:tests/**/coverage.cobertura.xml" "-targetdir:.coverage-report" -reporttypes:cobertura
         coverageLocations: |
           ${{github.workspace}}/.coverage-report/Cobertura.xml:cobertura
-    - uses: codecov/codecov-action@v2
-      with:
-        token: ${{ secrets.CODECOV_TOKEN }}
-        files: ${{github.workspace}}/.coverage-report/Cobertura.xml
-    - name: Run codacy-coverage-reporter
-      uses: codacy/codacy-coverage-reporter-action@v1
-      with:
-        project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
-        coverage-reports: .coverage-report/Cobertura.xml
