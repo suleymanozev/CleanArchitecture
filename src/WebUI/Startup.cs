@@ -52,8 +52,6 @@ public class Startup
             options.Filters.Add<ApiExceptionFilterAttribute>())
                 .AddFluentValidation(x => x.AutomaticValidationEnabled = false);
 
-        services.AddRazorPages();
-
         // Customise default API behaviour
         services.Configure<ApiBehaviorOptions>(options =>
             options.SuppressModelStateInvalidFilter = true);
@@ -87,8 +85,8 @@ public class Startup
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllerRoute(
-                name: "default",
-                pattern: "{controller}/{action=Index}/{id?}");
+                "default",
+                "{controller}/{action=Index}/{id?}");
             endpoints.MapRazorPages();
         });
 

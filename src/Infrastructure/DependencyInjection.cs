@@ -24,16 +24,29 @@ public static class DependencyInjection
 
         services.AddScoped<IDomainEventService, DomainEventService>();
 
-        services
-            .AddIdentity<ApplicationUser, ApplicationRole>()
-            .AddEntityFrameworkStores<ApplicationDbContext>()
-            .AddDefaultTokenProviders();
+        AddIdentity(services);
 
 
         services.AddTransient<IDateTime, DateTimeService>();
         services.AddTransient<IIdentityService, IdentityService>();
         services.AddTransient<ICsvFileBuilder, CsvFileBuilder>();
 
+        AddAuthentication(services, configuration);
+        AddAuthorization(services);
+
+        return services;
+    }
+
+    private static void AddIdentity(IServiceCollection services)
+    {
+        services
+            .AddIdentity<ApplicationUser, ApplicationRole>()
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultTokenProviders();
+    }
+
+    private static void AddAuthentication(IServiceCollection services, IConfiguration configuration)
+    {
         services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -53,10 +66,11 @@ public static class DependencyInjection
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]))
                 };
             });
+    }
 
+    private static void AddAuthorization(IServiceCollection services)
+    {
         services.AddAuthorization(options =>
             options.AddPolicy("CanPurge", policy => policy.RequireRole("Administrator")));
-
-        return services;
     }
 }

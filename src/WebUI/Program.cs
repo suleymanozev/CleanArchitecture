@@ -11,6 +11,13 @@ public class Program
     {
         var host = CreateHostBuilder(args).Build();
 
+        await MigrateAndSeed(host);
+
+        await host.RunAsync();
+    }
+
+    private static async Task MigrateAndSeed(IHost host)
+    {
         using (var scope = host.Services.CreateScope())
         {
             var services = scope.ServiceProvider;
@@ -18,17 +25,9 @@ public class Program
             try
             {
                 var context = services.GetRequiredService<ApplicationDbContext>();
-
-                if (context.Database.IsRelational())
-                {
-                    await context.Database.MigrateAsync();
-                }
-
-                var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
-                var roleManager = services.GetRequiredService<RoleManager<ApplicationRole>>();
-
-                await ApplicationDbContextSeed.SeedDefaultUserAsync(userManager, roleManager);
-                await ApplicationDbContextSeed.SeedSampleDataAsync(context);
+                
+                await Migrate(context);
+                await Seed(services, context);
             }
             catch (Exception ex)
             {
@@ -39,12 +38,27 @@ public class Program
                 throw;
             }
         }
+    }
 
-        await host.RunAsync();
+    private static async Task Migrate(DbContext context)
+    {
+        if (context.Database.IsRelational())
+        {
+            await context.Database.MigrateAsync();
+        }
+    }
+
+    private static async Task Seed(IServiceProvider services, ApplicationDbContext context)
+    {
+        var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+        var roleManager = services.GetRequiredService<RoleManager<ApplicationRole>>();
+
+        await ApplicationDbContextSeed.SeedDefaultUserAsync(userManager, roleManager);
+        await ApplicationDbContextSeed.SeedSampleDataAsync(context);
     }
 
     public static IHostBuilder CreateHostBuilder(string[] args) =>
         Host.CreateDefaultBuilder(args)
-            .ConfigureWebHostDefaults(webBuilder => 
+            .ConfigureWebHostDefaults(webBuilder =>
                 webBuilder.UseStartup<Startup>());
 }
