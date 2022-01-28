@@ -25,7 +25,7 @@ public class UpdateTodoItemDetailTests : BaseScenario
     [Fact]
     public async Task ShouldRequireValidTodoItemId()
     {
-        var command = new UpdateTodoItemCommand { Id = Guid.NewGuid(), Title = "New Title" };
+        var command = new UpdateTodoItemDetailCommand { Id = Guid.NewGuid(), Note = "New Title", Priority = PriorityLevel.Medium, ListId = Guid.NewGuid()};
         await FluentActions.Invoking(() => _fixture.SendAsync(command)).Should().ThrowAsync<NotFoundException>();
     }
 
