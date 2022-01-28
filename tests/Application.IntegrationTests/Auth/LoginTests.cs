@@ -2,10 +2,7 @@ using CleanArchitecture.Application.Auth.Commands.Login;
 using CleanArchitecture.Application.Common.Exceptions;
 using CleanArchitecture.Application.IntegrationTests.Common.Extensions;
 using CleanArchitecture.Application.IntegrationTests.Common.Fixtures;
-using CleanArchitecture.Infrastructure.Identity;
 using FluentAssertions;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
 namespace CleanArchitecture.Application.IntegrationTests.Auth;
@@ -33,8 +30,8 @@ public class LoginTests : BaseScenario
     [Fact]
     public async Task ShouldLogin()
     {
-        await _fixture.RunAsDefaultUserAsync();
-        var command = new LoginCommand {Username = "test@local", Password = "Testing1234!"};
+        await _fixture.RunAsAdministratorAsync();
+        var command = new LoginCommand {Username = "administrator@local", Password = "Administrator1234!"};
         await FluentActions.Invoking(async () =>
         {
             var tokenVm = await _fixture.SendAsync(command);

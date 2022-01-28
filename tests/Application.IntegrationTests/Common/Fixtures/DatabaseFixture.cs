@@ -1,6 +1,4 @@
-﻿using System.Net;
-using System.Net.Sockets;
-using DotNet.Testcontainers.Containers.Builders;
+﻿using DotNet.Testcontainers.Containers.Builders;
 using DotNet.Testcontainers.Containers.Configurations.Databases;
 using DotNet.Testcontainers.Containers.Modules.Databases;
 using Xunit;

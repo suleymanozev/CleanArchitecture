@@ -1,5 +1,4 @@
 using CleanArchitecture.Application.Auth.Commands.Login;
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CleanArchitecture.WebUI.Controllers;

@@ -1,5 +1,4 @@
-﻿using CleanArchitecture.Application.Common.Interfaces;
-using CleanArchitecture.Application.IntegrationTests.Common.Fixtures;
+﻿using CleanArchitecture.Application.IntegrationTests.Common.Fixtures;
 using CleanArchitecture.Domain.Common;
 using CleanArchitecture.Infrastructure.Identity;
 using CleanArchitecture.Infrastructure.Persistence;
@@ -7,7 +6,6 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Moq;
 
 namespace CleanArchitecture.Application.IntegrationTests.Common.Extensions;
 
