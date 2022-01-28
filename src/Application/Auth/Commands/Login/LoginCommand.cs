@@ -23,21 +23,25 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, TokenVm>
     public async Task<TokenVm> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
         var isExistsUser = await _identityService.IsExistsUser(request.Username);
-        if (isExistsUser && await _identityService.CheckPassword(request.Username, request.Password))
+        if (!isExistsUser || !await _identityService.CheckPassword(request.Username, request.Password))
         {
-            var roles = await _identityService.GetRoles(request.Username);
-            var claims = new List<Claim>
-            {
-                new(ClaimTypes.NameIdentifier,
-                    (await _identityService.GetUserId(request.Username)).ToString()),
-                new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-            };
-
-            claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
-
-            return new TokenVm {Token = await _identityService.GetJwtToken(claims)};
+            throw new UnauthorizedAccessException();
         }
 
-        throw new UnauthorizedAccessException();
+        var roles = await _identityService.GetRoles(request.Username);
+        var claims = new List<Claim>
+        {
+            new(ClaimTypes.NameIdentifier,
+                (await _identityService.GetUserId(request.Username)).ToString()),
+            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+        };
+
+        foreach (var role in roles)
+            claims.Add(new Claim(ClaimTypes.Role, role));
+
+        // claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
+
+        return new TokenVm {Token = await _identityService.GetJwtToken(claims)};
+
     }
 }
