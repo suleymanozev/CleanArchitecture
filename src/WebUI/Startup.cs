@@ -34,19 +34,7 @@ public class Startup
         services.AddHealthChecks()
             .AddDbContextCheck<ApplicationDbContext>();
 
-        services.AddMassTransit(x =>
-        {
-            x.AddConsumers(typeof(Application.DependencyInjection).Assembly);
-            x.SetKebabCaseEndpointNameFormatter();
-            
-            x.UsingRabbitMq((ctx, cfg) =>
-            {
-                cfg.Host(Configuration["AMQP_URI"]);
-                cfg.UseSystemTextJsonOnly();
-                cfg.ConfigureEndpoints(ctx);
-            });
-        });
-        services.AddMassTransitHostedService();
+        AddMassTransit(services);
 
         services.AddControllersWithViews(options =>
             options.Filters.Add<ApiExceptionFilterAttribute>())
@@ -57,6 +45,23 @@ public class Startup
             options.SuppressModelStateInvalidFilter = true);
 
         services.AddSwaggerGen();
+    }
+
+    private void AddMassTransit(IServiceCollection services)
+    {
+        services.AddMassTransit(x =>
+        {
+            x.AddConsumers(typeof(Application.DependencyInjection).Assembly);
+            x.SetKebabCaseEndpointNameFormatter();
+
+            x.UsingRabbitMq((ctx, cfg) =>
+            {
+                cfg.Host(Configuration["AMQP_URI"]);
+                cfg.UseSystemTextJsonOnly();
+                cfg.ConfigureEndpoints(ctx);
+            });
+        });
+        services.AddMassTransitHostedService();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -82,13 +87,6 @@ public class Startup
 
         app.UseAuthentication();
         app.UseAuthorization();
-        app.UseEndpoints(endpoints =>
-        {
-            endpoints.MapControllerRoute(
-                "default",
-                "{controller}/{action=Index}/{id?}");
-            endpoints.MapRazorPages();
-        });
 
         app.UseSwagger();
         app.UseSwaggerUI();

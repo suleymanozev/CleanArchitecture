@@ -33,25 +33,16 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     {
         foreach (var entry in ChangeTracker.Entries<AuditableEntity>())
         {
-            switch (entry.State)
+            switch (entry)
             {
-                case EntityState.Added:
+                case {State: EntityState.Added}:
                     entry.Entity.CreatedBy = _currentUserService.UserId;
                     entry.Entity.Created = _dateTime.Now;
                     break;
-
-                case EntityState.Modified:
+                case {State: EntityState.Modified}:
                     entry.Entity.LastModifiedBy = _currentUserService.UserId;
                     entry.Entity.LastModified = _dateTime.Now;
                     break;
-                case EntityState.Detached:
-                    break;
-                case EntityState.Unchanged:
-                    break;
-                case EntityState.Deleted:
-                    break;
-                default:
-                    throw new Exception();
             }
         }
 
