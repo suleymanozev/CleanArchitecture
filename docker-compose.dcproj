@@ -13,7 +13,4 @@
     <None Include="docker-compose.override.yml" />
     <None Include=".dockerignore" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include=".docker\postgres\create-multiple-postgresql-databases.sh" />
-  </ItemGroup>
 </Project>

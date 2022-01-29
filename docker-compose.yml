@@ -25,10 +25,9 @@ services:
     environment:
       POSTGRES_PASSWORD: myS3cr3t
       POSTGRES_USER: CleanArchitecture
-      POSTGRES_MULTIPLE_DATABASES: CleanArchitectureDB,CleanArchitectureTestDB
+      POSTGRES_DATABASE: CleanArchitectureDB
     volumes:
       - db-data:/var/lib/postgresql/data
-      - .docker/postgres:/docker-entrypoint-initdb.d
   queue:
     image: rabbitmq:3-management-alpine
     volumes:
