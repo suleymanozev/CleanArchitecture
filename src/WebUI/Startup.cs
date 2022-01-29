@@ -37,8 +37,8 @@ public class Startup
         AddMassTransit(services);
 
         services.AddControllers(options =>
-            options.Filters.Add<ApiExceptionFilterAttribute>())
-                .AddFluentValidation(x => x.AutomaticValidationEnabled = false);
+                options.Filters.Add<ApiExceptionFilterAttribute>())
+            .AddFluentValidation(x => x.AutomaticValidationEnabled = false);
 
         // Customise default API behaviour
         services.Configure<ApiBehaviorOptions>(options =>
@@ -90,5 +90,10 @@ public class Startup
 
         app.UseSwagger();
         app.UseSwaggerUI();
+
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapControllers();
+        });
     }
 }
